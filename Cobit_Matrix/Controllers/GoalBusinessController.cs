@@ -1,143 +1,94 @@
-using Cobit_Matrix.Data;
 using Cobit_Matrix.Models;
+using Cobit_Matrix.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace Cobit_Matrix.Controllers;
-
-public class GoalBusinessController: Controller
+namespace Cobit_Matrix.Controllers
 {
-    private readonly AppDbContext _context;
-    
-    public GoalBusinessController(AppDbContext context)
+    public class GoalBusinessController : Controller
     {
-        _context = context;
-    }
-    
-    // GET: GoalBusiness
-    public async Task<IActionResult> Index()
-    {
-        return View(await _context.GoalBussiness.ToListAsync());
-    }
+        private readonly GoalBusinessAPIService _goalBusinessAPIService;
 
-    // GET: GoalBusiness/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
+        public GoalBusinessController(GoalBusinessAPIService goalBusinessAPIService)
         {
-            return NotFound();
+            _goalBusinessAPIService = goalBusinessAPIService;
         }
 
-        var goalBusiness = await _context.GoalBussiness
-            .FirstOrDefaultAsync(m => m.IdEmpresarial == id);
-        if (goalBusiness == null)
+        public async Task<IActionResult> Index()
         {
-            return NotFound();
+            var goalBusinesses = await _goalBusinessAPIService.GetGoalBusinessesAsync();
+            return View(goalBusinesses);
         }
 
-        return View(goalBusiness);
-    }
-
-    // GET: GoalBusiness/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: GoalBusiness/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdEmpresarial,Codigo,Descripcion")] MetaEmpresarial goalBusiness)
-    {
-        if (ModelState.IsValid)
+        public async Task<IActionResult> Details(int id)
         {
-            _context.Add(goalBusiness);
-            await _context.SaveChangesAsync();
+            var goalBusiness = await _goalBusinessAPIService.GetGoalBusinessAsync(id);
+            if (goalBusiness == null)
+            {
+                return NotFound();
+            }
+            return View(goalBusiness);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(MetaEmpresarial goalBusiness)
+        {
+            if (ModelState.IsValid)
+            {
+                await _goalBusinessAPIService.CreateGoalBusinessAsync(goalBusiness);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(goalBusiness);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var goalBusiness = await _goalBusinessAPIService.GetGoalBusinessAsync(id);
+            if (goalBusiness == null)
+            {
+                return NotFound();
+            }
+            return View(goalBusiness);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, MetaEmpresarial goalBusiness)
+        {
+            if (id != goalBusiness.IdEmpresarial)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _goalBusinessAPIService.UpdateGoalBusinessAsync(id, goalBusiness);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(goalBusiness);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var goalBusiness = await _goalBusinessAPIService.GetGoalBusinessAsync(id);
+            if (goalBusiness == null)
+            {
+                return NotFound();
+            }
+            return View(goalBusiness);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _goalBusinessAPIService.DeleteGoalBusinessAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        return View(goalBusiness);
-    }
-
-    // GET: GoalBusiness/Edit/5
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var goalBusiness = await _context.GoalBussiness.FindAsync(id);
-        if (goalBusiness == null)
-        {
-            return NotFound();
-        }
-        return View(goalBusiness);
-    }
-
-    // POST: GoalBusiness/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("IdEmpresarial,Codigo,Descripcion")] MetaEmpresarial goalBusiness)
-    {
-        if (id != goalBusiness.IdEmpresarial)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(goalBusiness);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GoalBusinessExists(goalBusiness.IdEmpresarial))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(goalBusiness);
-    }
-
-    // GET: GoalBusiness/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var goalBusiness = await _context.GoalBussiness
-            .FirstOrDefaultAsync(m => m.IdEmpresarial == id);
-        if (goalBusiness == null)
-        {
-            return NotFound();
-        }
-
-        return View(goalBusiness);
-    }
-
-    // POST: GoalBusiness/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var goalBusiness = await _context.GoalBussiness.FindAsync(id);
-        _context.GoalBussiness.Remove(goalBusiness);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool GoalBusinessExists(int id)
-    {
-        return _context.GoalBussiness.Any(e => e.IdEmpresarial == id);
     }
 }
