@@ -1,7 +1,5 @@
-using Cobit_Matrix.Data;
 using Cobit_Matrix.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cobit_Matrix.Controllers;
 

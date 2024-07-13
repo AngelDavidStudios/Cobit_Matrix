@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cobit_Matrix", "Cobit_Matri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixCobit-API", "MatrixCobit-API\MatrixCobit-API.csproj", "{29DC12BB-6883-4BD9-B4AC-7200FBBE754B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cobit-Models", "Cobit-Models\Cobit-Models.csproj", "{E08E7655-079D-46A9-AE75-788CB699464E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{29DC12BB-6883-4BD9-B4AC-7200FBBE754B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29DC12BB-6883-4BD9-B4AC-7200FBBE754B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29DC12BB-6883-4BD9-B4AC-7200FBBE754B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E08E7655-079D-46A9-AE75-788CB699464E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E08E7655-079D-46A9-AE75-788CB699464E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E08E7655-079D-46A9-AE75-788CB699464E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E08E7655-079D-46A9-AE75-788CB699464E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
