@@ -1,0 +1,33 @@
+@model IEnumerable<Cobit_Matrix.Models.MetaEmpresarial>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Codigo</th>
+        <th>Descripcion</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Codigo)</td>
+            <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdEmpresarial">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdEmpresarial">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdEmpresarial">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
