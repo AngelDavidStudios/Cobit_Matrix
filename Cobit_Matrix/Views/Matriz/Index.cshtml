@@ -60,6 +60,14 @@ ViewData["Title"] = "Matriz de Metas";
             table.column(colIdx).nodes().to$().each(function () {
                 var cell = $(this);
                 cell.toggleClass('highlight');
+
+                // Alternar la habilitación de las opciones de selección
+                var select = cell.find('select');
+                if (cell.hasClass('highlight')) {
+                    select.prop('disabled', true);
+                } else {
+                    select.prop('disabled', false);
+                }
             });
 
             // Alternar la clase de resaltado en filas que contienen "P" en la columna seleccionada
