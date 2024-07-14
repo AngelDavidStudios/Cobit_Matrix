@@ -1,33 +1,83 @@
 @model Cobit_Matrix.ViewModel.MatrizViewModel
+@{
+ViewData["Title"] = "Matriz de Metas";
+}
 
-<table class="table">
-    <thead>
-    <tr>
-        <th></th>
-        @for (int i = 0; i < Model.MetasEmpresariales.Count; i++)
-        {
-            <th id="header-@i" class="header-cell" data-column-index="@i">@Model.MetasEmpresariales[i].Codigo</th>
-        }
-    </tr>
-    </thead>
-    <tbody>
-    @for (int i = 0; i < Model.MetasAlineamiento.Count; i++)
-    {
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="~/css/styles.css" />
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table id="matrixTable" class="display" style="width:100%">
+        <thead>
         <tr>
-            <td>@Model.MetasAlineamiento[i].Codigo</td>
-            @for (int j = 0; j < Model.MetasEmpresariales.Count; j++)
+            <th>Meta Alineamiento</th>
+            @foreach (var metaEmpresarial in Model.MetaEmpresariales)
             {
-                <td class="column-@j">
-                    <select>
-                        <option value="S">S</option>
-                        <option value="P">P</option>
-                    </select>
-                </td>
+                <th>@metaEmpresarial.Codigo<br /><small>@metaEmpresarial.Descripcion</small></th>
             }
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var metaAlineamiento in Model.MetaAlineamientos)
+        {
+            <tr>
+                <td>@metaAlineamiento.Codigo<br /><small>@metaAlineamiento.Descripcion</small></td>
+                @foreach (var metaEmpresarial in Model.MetaEmpresariales)
+                {
+                    <td>
+                        <select class="form-control matrix-select">
+                            <option value="">--</option>
+                            <option value="S">S</option>
+                            <option value="P">P</option>
+                        </select>
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
 
-<script src="~/js/scripts.js"></script>
-<link rel="stylesheet" href="~/css/styles.css">
+<script>
+    $(document).ready(function () {
+        var table = $('#matrixTable').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: false, // This removes the default sorting functionality
+        });
+
+        // Manejar clics en encabezados de columnas
+        $('#matrixTable thead').on('click', 'th', function () {
+            // Obtener el índice de la columna
+            var colIdx = $(this).index();
+
+            // Alternar la clase de resaltado en todas las celdas de la columna
+            table.column(colIdx).nodes().to$().each(function () {
+                var cell = $(this);
+                cell.toggleClass('highlight');
+            });
+
+            // Alternar la clase de resaltado en filas que contienen "P" en la columna seleccionada
+            table.rows().every(function () {
+                var row = this.nodes().to$();
+                var cell = row.find('td').eq(colIdx); // Incluir la primera columna
+                var containsP = cell.find('select').val() === 'P';
+
+                if (containsP) {
+                    if (row.hasClass('filaHight')) {
+                        row.css('background-color', '');
+                        row.removeClass('filaHight');
+                    } else {
+                        row.css('background-color', '#4fc3a2');
+                        row.addClass('filaHight');
+                    }
+                }
+            });
+        });
+    });
+</script>

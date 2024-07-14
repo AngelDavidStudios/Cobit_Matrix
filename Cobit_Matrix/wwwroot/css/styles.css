@@ -1,3 +1,14 @@
 .highlight {
-    background-color: #1aa0b5;
+    background-color: #71a4c6;
+}
+.columnaHight{
+    background-color: #71a4c6;
+}
+
+.filaHight{
+    background-color: #4fc3a2;
+}
+
+table.dataTable tbody tr.selected {
+    background-color: transparent !important;
 }

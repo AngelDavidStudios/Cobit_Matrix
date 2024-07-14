@@ -4,6 +4,6 @@ namespace Cobit_Matrix.ViewModel;
 
 public class MatrizViewModel
 {
-    public List<MetaEmpresarial> MetasEmpresariales { get; set; }
-    public List<MetaAlineamiento> MetasAlineamiento { get; set; }
+    public IEnumerable<MetaAlineamiento> MetaAlineamientos { get; set; }
+    public IEnumerable<MetaEmpresarial> MetaEmpresariales { get; set; }
 }

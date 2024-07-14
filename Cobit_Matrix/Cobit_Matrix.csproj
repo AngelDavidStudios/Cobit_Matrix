@@ -13,6 +13,23 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Matrix\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\.eslintrc.cjs" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\.gitignore" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\package-lock.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\package.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\public\vite.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\README.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\App.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\App.tsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\assets\react.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\index.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\main.tsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\src\vite-env.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\tsconfig.app.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\tsconfig.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\tsconfig.node.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\FrontEnd\vite.config.ts" />
     </ItemGroup>
 
     <ItemGroup>

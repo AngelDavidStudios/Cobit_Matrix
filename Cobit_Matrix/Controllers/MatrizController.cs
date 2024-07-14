@@ -1,3 +1,5 @@
+using Cobit_Matrix.Models;
+using Cobit_Matrix.Services;
 using Cobit_Matrix.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,21 +7,26 @@ namespace Cobit_Matrix.Controllers;
 
 public class MatrizController: Controller
 {
-    // private readonly AppDbContext _context;
-    //
-    // public MatrizController(AppDbContext context)
-    // {
-    //     _context = context;
-    // }
-    //
-    // public async Task<IActionResult> Index()
-    // {
-    //     var viewModel = new MatrizViewModel()
-    //     {
-    //         MetasEmpresariales = await _context.GoalBussiness.ToListAsync(),
-    //         MetasAlineamiento = await _context.GoalAlignment.ToListAsync()
-    //     };
-    //
-    //     return View(viewModel);
-    // }
+    private readonly ApiService<MetaAlineamiento> _metaAlineamientoService;
+    private readonly ApiService<MetaEmpresarial> _metaEmpresarialService;
+    
+    public MatrizController()
+    {
+        _metaAlineamientoService = new ApiService<MetaAlineamiento>("http://localhost:5249/api");
+        _metaEmpresarialService = new ApiService<MetaEmpresarial>("http://localhost:5249/api");
+    }
+    
+    public async Task<IActionResult> Index()
+    {
+        var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
+        var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
+
+        var viewModel = new MatrizViewModel()
+        {
+            MetaAlineamientos = metaAlineamientos,
+            MetaEmpresariales = metaEmpresariales
+        };
+
+        return View(viewModel);
+    }
 }
