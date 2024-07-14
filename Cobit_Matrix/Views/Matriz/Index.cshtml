@@ -10,6 +10,11 @@ ViewData["Title"] = "Matriz de Metas";
 
 <h2>@ViewData["Title"]</h2>
 
+<div>
+    <button type="button" class="btn btn-warning" id="resetButton">Resetear</button>
+    <button type="button" class="btn btn-success" id="lockButton">Guardar Cambios</button>
+    <button type="button" class="btn btn-primary" id="nextButton" disabled>Siguiente</button>
+</div>
 <div class="table-responsive">
     <table id="matrixTable" class="display" style="width:100%">
         <thead>
@@ -51,17 +56,40 @@ ViewData["Title"] = "Matriz de Metas";
             ordering: false, // This removes the default sorting functionality
         });
 
-        // Manejar clics en encabezados de columnas
-        $('#matrixTable thead').on('click', 'th', function () {
-            // Obtener el índice de la columna
-            var colIdx = $(this).index();
+        var isLocked = false; // Flag to track the lock state
 
-            // Alternar la clase de resaltado en todas las celdas de la columna
+        // Function to reset the matrix
+        $('#resetButton').on('click', function () {
+            table.cells().nodes().to$().find('select').val('').prop('disabled', false);
+            table.cells().nodes().to$().removeClass('highlight');
+            table.rows().nodes().to$().css('background-color', '').removeClass('filaHight');
+            $('#nextButton').prop('disabled', true);
+            $('#lockButton').prop('disabled', false);
+            isLocked = false; // Reset the lock state
+        });
+
+        // Function to lock the matrix
+        $('#lockButton').on('click', function () {
+            table.cells().nodes().to$().find('select').prop('disabled', true);
+            $('#nextButton').prop('disabled', false);
+            $('#lockButton').prop('disabled', true);
+            $('#resetButton').prop('disabled', false);
+            isLocked = true; // Set the lock state
+        });
+
+        // Function to go to the next page
+        $('#nextButton').on('click', function () {
+            window.location.href = '/nextPage'; // Replace with the actual URL of the next page
+        });
+
+        // Existing column click handler
+        $('#matrixTable thead').on('click', 'th', function () {
+            if (isLocked) return; // Prevent highlighting if the matrix is locked
+
+            var colIdx = $(this).index();
             table.column(colIdx).nodes().to$().each(function () {
                 var cell = $(this);
                 cell.toggleClass('highlight');
-
-                // Alternar la habilitación de las opciones de selección
                 var select = cell.find('select');
                 if (cell.hasClass('highlight')) {
                     select.prop('disabled', true);
@@ -70,12 +98,10 @@ ViewData["Title"] = "Matriz de Metas";
                 }
             });
 
-            // Alternar la clase de resaltado en filas que contienen "P" en la columna seleccionada
             table.rows().every(function () {
                 var row = this.nodes().to$();
-                var cell = row.find('td').eq(colIdx); // Incluir la primera columna
+                var cell = row.find('td').eq(colIdx);
                 var containsP = cell.find('select').val() === 'P';
-
                 if (containsP) {
                     if (row.hasClass('filaHight')) {
                         row.css('background-color', '');
