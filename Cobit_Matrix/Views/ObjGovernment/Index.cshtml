@@ -1,4 +1,4 @@
-@model IEnumerable<Cobit_Matrix.Models.MetaAlineamiento>
+@model IEnumerable<Cobit_Matrix.Models.ObjetivosGobierno>
 
 @{
     ViewData["Title"] = "Index";
@@ -23,9 +23,9 @@
             <td>@Html.DisplayFor(modelItem => item.Codigo)</td>
             <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdAlineamiento">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.IdAlineamiento">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdAlineamiento">Eliminar</a>
+                <a asp-action="Edit" asp-route-id="@item.IdGobierno">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdGobierno">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdGobierno">Delete</a>
             </td>
         </tr>
     }

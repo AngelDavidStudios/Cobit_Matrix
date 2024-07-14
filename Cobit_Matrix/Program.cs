@@ -7,6 +7,7 @@ builder.Services.AddControllersWithViews();
 // Register API Services
 builder.Services.AddScoped<GoalAlignAPIService>();
 builder.Services.AddScoped<GoalBusinessAPIService>();
+builder.Services.AddScoped<ObjGovernAPIService>();
 
 
 var app = builder.Build();

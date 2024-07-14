@@ -1,4 +1,4 @@
-@model Cobit_Matrix.Models.MetaEmpresarial
+@model Cobit_Matrix.Models.ObjetivosGobierno
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,7 +6,7 @@
 
 <h1>Edit</h1>
 
-<h4>Metas Empresariales</h4>
+<h4>Objetivos Gobierno</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,7 +21,7 @@
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="IdEmpresarial" />
+            <input type="hidden" asp-for="IdGobierno" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

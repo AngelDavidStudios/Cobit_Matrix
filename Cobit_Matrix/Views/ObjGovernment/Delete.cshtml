@@ -1,4 +1,4 @@
-@model Cobit_Matrix.Models.MetaEmpresarial
+@model Cobit_Matrix.Models.ObjetivosGobierno
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,7 +6,7 @@
 
 <h2>Delete</h2>
 
-<h4>Metas Empresariales</h4>
+<h4>Objetivos de Gobierno</h4>
 <hr />
 <div>
     <h4>Are you sure you want to delete this?</h4>
@@ -26,7 +26,7 @@
     </dl>
 
     <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="IdEmpresarial" />
+        <input type="hidden" asp-for="IdGobierno" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Regresar</a>
     </form>
