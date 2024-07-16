@@ -1,4 +1,5 @@
 @model Cobit_Matrix.ViewModel.MatrizViewModel
+
 @{
 ViewData["Title"] = "Matriz de Metas";
 }
@@ -11,9 +12,12 @@ ViewData["Title"] = "Matriz de Metas";
 <h2>@ViewData["Title"]</h2>
 
 <div>
+    <form id="highlightedRowsForm" method="post" action="/Matriz/SaveHighlightedRows">
     <button type="button" class="btn btn-warning" id="resetButton">Resetear</button>
     <button type="button" class="btn btn-success" id="lockButton">Guardar Cambios</button>
-    <button type="button" class="btn btn-primary" id="nextButton" disabled>Siguiente</button>
+        <input type="hidden" name="highlightedRowIndexes" id="highlightedRowIndexes" />
+        <button id="nextButton" type="submit" class="btn btn-primary">Siguiente</button>
+    </form>
 </div>
 <div class="table-responsive">
     <table id="matrixTable" class="display" style="width:100%">
@@ -22,26 +26,26 @@ ViewData["Title"] = "Matriz de Metas";
             <th>Matriz Cobit 19</th>
             @foreach (var metaEmpresarial in Model.MetaEmpresariales)
             {
-                <th>@metaEmpresarial.Codigo<br /><small>@metaEmpresarial.Descripcion</small></th>
+            <th>@metaEmpresarial.Codigo<br /><small>@metaEmpresarial.Descripcion</small></th>
             }
         </tr>
         </thead>
         <tbody>
         @foreach (var metaAlineamiento in Model.MetaAlineamientos)
         {
-            <tr>
-                <td>@metaAlineamiento.Codigo<br /><small>@metaAlineamiento.Descripcion</small></td>
-                @foreach (var metaEmpresarial in Model.MetaEmpresariales)
-                {
-                    <td>
-                        <select class="form-control matrix-select">
-                            <option value="">--</option>
-                            <option value="S">S</option>
-                            <option value="P">P</option>
-                        </select>
-                    </td>
-                }
-            </tr>
+        <tr>
+            <td>@metaAlineamiento.Codigo<br /><small>@metaAlineamiento.Descripcion</small></td>
+            @foreach (var metaEmpresarial in Model.MetaEmpresariales)
+            {
+            <td>
+                <select class="form-control matrix-select">
+                    <option value="">--</option>
+                    <option value="S">S</option>
+                    <option value="P">P</option>
+                </select>
+            </td>
+            }
+        </tr>
         }
         </tbody>
     </table>
@@ -49,6 +53,7 @@ ViewData["Title"] = "Matriz de Metas";
 
 <script>
     $(document).ready(function () {
+        $('#nextButton').prop('disabled', true);
         var table = $('#matrixTable').DataTable({
             paging: false,
             searching: false,
@@ -85,8 +90,8 @@ ViewData["Title"] = "Matriz de Metas";
                     highlightedRows.push(index);
                 }
             });
-            localStorage.setItem('highlightedRows', JSON.stringify(highlightedRows));
-            window.location.href = '/Matriz/EditObjMatrix'; // Replace with the actual URL of the next page
+            $('#highlightedRowIndexes').val(JSON.stringify(highlightedRows));
+            $('#highlightedRowsForm').submit();
         });
 
         // Existing column click handler

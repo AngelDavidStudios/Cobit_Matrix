@@ -3,50 +3,61 @@ using Cobit_Matrix.Services;
 using Cobit_Matrix.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cobit_Matrix.Controllers;
-
-public class MatrizController: Controller
+namespace Cobit_Matrix.Controllers
 {
-    private readonly ApiService<MetaAlineamiento> _metaAlineamientoService;
-    private readonly ApiService<MetaEmpresarial> _metaEmpresarialService;
-    private readonly ApiService<ObjetivosGobierno> _ObjetivosGobiernoService;
-    
-    public MatrizController()
+    public class MatrizController : Controller
     {
-        _metaAlineamientoService = new ApiService<MetaAlineamiento>("http://localhost:5249/api");
-        _metaEmpresarialService = new ApiService<MetaEmpresarial>("http://localhost:5249/api");
-        _ObjetivosGobiernoService = new ApiService<ObjetivosGobierno>("http://localhost:5249/api");
-    }
-    
-    public async Task<IActionResult> Index()
-    {
-        var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
-        var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
-        var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
+        private readonly ApiService<MetaAlineamiento> _metaAlineamientoService;
+        private readonly ApiService<MetaEmpresarial> _metaEmpresarialService;
+        private readonly ApiService<ObjetivosGobierno> _ObjetivosGobiernoService;
 
-        var viewModel = new MatrizViewModel()
+        public MatrizController()
         {
-            MetaAlineamientos = metaAlineamientos,
-            MetaEmpresariales = metaEmpresariales,
-            ObjetivosGobierno = objetivosGobierno
-        };
+            _metaAlineamientoService = new ApiService<MetaAlineamiento>("http://localhost:5249/api");
+            _metaEmpresarialService = new ApiService<MetaEmpresarial>("http://localhost:5249/api");
+            _ObjetivosGobiernoService = new ApiService<ObjetivosGobierno>("http://localhost:5249/api");
+        }
 
-        return View(viewModel);
-    }
-
-    public async Task<IActionResult> EditObjMatrix()
-    {
-        var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
-        var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
-        var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
-
-        var viewModel = new MatrizViewModel()
+        public async Task<IActionResult> Index()
         {
-            MetaAlineamientos = metaAlineamientos,
-            MetaEmpresariales = metaEmpresariales,
-            ObjetivosGobierno = objetivosGobierno
-        };
+            var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
+            var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
+            var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
 
-        return View(viewModel);
+            var viewModel = new MatrizViewModel()
+            {
+                MetaAlineamientos = metaAlineamientos,
+                MetaEmpresariales = metaEmpresariales,
+                ObjetivosGobierno = objetivosGobierno
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SaveHighlightedRows(List<int> highlightedRowIndexes)
+        {
+            TempData["HighlightedRowIndexes"] = highlightedRowIndexes;
+            return RedirectToAction("EditObjMatrix");
+        }
+
+        public async Task<IActionResult> EditObjMatrix()
+        {
+            var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
+            var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
+            var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
+
+            var highlightedRowIndexes = TempData["HighlightedRowIndexes"] as List<int> ?? new List<int>();
+
+            var viewModel = new MatrizViewModel()
+            {
+                MetaAlineamientos = metaAlineamientos,
+                MetaEmpresariales = metaEmpresariales,
+                ObjetivosGobierno = objetivosGobierno,
+                HighlightedRowIndexes = highlightedRowIndexes
+            };
+
+            return View(viewModel);
+        }
     }
 }

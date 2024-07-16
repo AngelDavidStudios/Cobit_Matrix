@@ -66,13 +66,20 @@
         var isLocked = false; // Flag to track the lock state
 
         // Retrieve highlighted rows from local storage
-        var highlightedRows = JSON.parse(localStorage.getItem('highlightedRows')) || [];
+        var highlightedRowIndexes = @Html.Raw(Json.Serialize(Model.HighlightedRowIndexes));
+
+        // Highlight columns based on highlightedRowIndexes
+        highlightedRowIndexes.forEach(function (rowIndex) {
+            table.column(rowIndex + 1).nodes().to$().css('background-color', '#71a4c6');
+            $(table.column(rowIndex + 1).header()).css('background-color', '#71a4c6'); // Highlight header
+        });
 
         // Function to reset the matrix
         $('#resetButton').on('click', function () {
             table.cells().nodes().to$().find('select').val('').prop('disabled', false);
             table.cells().nodes().to$().removeClass('highlight');
-            table.rows().nodes().to$().css('background-color', '').removeClass('filaHight');
+            table.columns().nodes().to$().css('background-color', '')
+            table.rows().nodes().to$().css('background-color', '').removeClass('highlight');
             $('#nextButton').prop('disabled', true);
             $('#lockButton').prop('disabled', false);
             isLocked = false; // Reset the lock state
@@ -131,5 +138,8 @@
     }
     .highlight-column {
         background-color: #ffff99 !important;
+    }
+    table.dataTable tbody tr.selected {
+        background-color: transparent !important;
     }
 </style>
