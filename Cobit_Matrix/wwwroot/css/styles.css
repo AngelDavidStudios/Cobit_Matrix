@@ -12,3 +12,17 @@
 table.dataTable tbody tr.selected {
     background-color: transparent !important;
 }
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+}
+.reportePrimario {
+    background-color: #007bff !important;
+}
+.reporteTitle {
+    background-color: #dc3545 !important;
+}
+.text-white {
+    color: #ffffff !important;
+}

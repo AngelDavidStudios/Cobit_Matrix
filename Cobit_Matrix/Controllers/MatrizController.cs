@@ -59,5 +59,31 @@ namespace Cobit_Matrix.Controllers
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        public IActionResult SaveChanges(List<int> highlightedRowIndexes)
+        {
+            TempData["HighlightedRowIndexes"] = highlightedRowIndexes;
+            return RedirectToAction("Report");
+        }
+
+        public async Task<IActionResult> Report()
+        {
+            var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
+            var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
+            var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
+
+            var highlightedRowIndexes = TempData["HighlightedRowIndexes"] as List<int> ?? new List<int>();
+
+            var viewModel = new MatrizViewModel()
+            {
+                MetaAlineamientos = metaAlineamientos,
+                MetaEmpresariales = metaEmpresariales,
+                ObjetivosGobierno = objetivosGobierno,
+                HighlightedRowIndexes = highlightedRowIndexes
+            };
+
+            return View(viewModel);
+        }
     }
 }

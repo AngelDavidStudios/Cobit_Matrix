@@ -60,10 +60,10 @@
             paging: false,
             searching: false,
             info: false,
-            ordering: false, // This removes the default sorting functionality
+            ordering: false,
         });
 
-        var isLocked = false; // Flag to track the lock state
+        var isLocked = false; 
 
         // Retrieve highlighted rows from local storage
         var highlightedRowIndexes = @Html.Raw(Json.Serialize(Model.HighlightedRowIndexes));
@@ -71,7 +71,7 @@
         // Highlight columns based on highlightedRowIndexes
         highlightedRowIndexes.forEach(function (rowIndex) {
             table.column(rowIndex + 1).nodes().to$().css('background-color', '#71a4c6');
-            $(table.column(rowIndex + 1).header()).css('background-color', '#71a4c6'); // Highlight header
+            $(table.column(rowIndex + 1).header()).css('background-color', '#71a4c6');
         });
 
         // Function to reset the matrix
@@ -79,11 +79,13 @@
             table.cells().nodes().to$().find('select').val('').prop('disabled', false);
             table.cells().nodes().to$().removeClass('highlight');
             table.columns().nodes().to$().css('background-color', '')
+            table.column().nodes().to$().css('background-color', '');
+            $(table.column().header()).css('background-color', '');
             table.rows().nodes().to$().css('background-color', '').removeClass('highlight');
             $('#nextButton').prop('disabled', true);
             $('#lockButton').prop('disabled', false);
-            isLocked = false; // Reset the lock state
-            $('#matrixTable thead th').css('background-color', ''); // Reset header highlight
+            isLocked = false;
+            $('#matrixTable thead th').css('background-color', '');
         });
 
         // Function to lock the matrix
@@ -92,19 +94,40 @@
             $('#nextButton').prop('disabled', false);
             $('#lockButton').prop('disabled', true);
             $('#resetButton').prop('disabled', false);
-            isLocked = true; // Set the lock state
+            isLocked = true;
+
+            var highlightedRows = [];
+            table.rows().nodes().to$().each(function (index) {
+                if ($(this).hasClass('highlight')) {
+                    highlightedRows.push(index);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("SaveChanges", "Matriz")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ highlightedRowIndexes: highlightedRows }),
+                success: function (response) {
+                    if (response.success) {
+                        console.log('Changes saved successfully');
+                    } else {
+                        console.error('Failed to save changes');
+                    }
+                }
+            });
         });
 
         // Function to go to the next page
         $('#nextButton').on('click', function () {
-            window.location.href = '/nextPage'; // Replace with the actual URL of the next page
+            window.location.href = '/Matriz/Report'; 
         });
 
         // Left header button click handler
         $('#matrixTable tbody').on('click', '.highlight-row-btn', function (e) {
-            e.stopPropagation(); // Prevent the row click handler from being triggered
+            e.stopPropagation();
 
-            if (isLocked) return; // Prevent highlighting if the matrix is locked
+            if (isLocked) return;
 
             var row = $(this).closest('tr');
             row.toggleClass('highlight');
@@ -115,7 +138,7 @@
                     if ($(this).val() === 'P') {
                         var colIdx = $(this).closest('td').index();
                         table.column(colIdx).nodes().to$().css('background-color', '#71a4c6');
-                        $(table.column(colIdx).header()).css('background-color', '#71a4c6'); // Highlight header
+                        $(table.column(colIdx).header()).css('background-color', '#71a4c6');
                     }
                 });
             } else {
@@ -123,7 +146,7 @@
                     if ($(this).val() === 'P') {
                         var colIdx = $(this).closest('td').index();
                         table.column(colIdx).nodes().to$().css('background-color', '');
-                        $(table.column(colIdx).header()).css('background-color', ''); // Unhighlight header
+                        $(table.column(colIdx).header()).css('background-color', '');
                     }
                 });
             }

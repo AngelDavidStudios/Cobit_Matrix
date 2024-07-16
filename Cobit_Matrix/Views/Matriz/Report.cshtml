@@ -1,0 +1,134 @@
+@model Cobit_Matrix.ViewModel.MatrizViewModel
+
+@{
+    ViewData["Title"] = "Reporte Final Objetivos de Gobierno y TI";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
+<link rel="stylesheet" href="~/css/styles.css"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table id="reportTable" class="table table-bordered table-striped text-center">
+        <thead>
+            <tr class="bg-danger text-white">
+                <th colspan="@Model.ObjetivosGobierno.Count()" class="text-center">Modelo Core de COBIT</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ObjetivosGobierno.Any(o => o.Codigo.StartsWith("EDM")))
+            {
+                <tr class="bg-primary text-white">
+                    <td colspan="@Model.ObjetivosGobierno.Count(o => o.Codigo.StartsWith("EDM"))" class="text-center">Evaluar, Dirigir y Monitorar</td>
+                </tr>
+                <tr>
+                    @foreach (var objetivo in Model.ObjetivosGobierno.Where(o => o.Codigo.StartsWith("EDM")))
+                    {
+                        <td class="align-middle @(Model.HighlightedRowIndexes.Contains(objetivo.IdGobierno) ? "bg-success text-white" : "")">@objetivo.Codigo<br /><small>@objetivo.Descripcion</small></td>
+                    }
+                </tr>
+            }
+            
+            @if (Model.ObjetivosGobierno.Any(o => o.Codigo.StartsWith("APO")))
+            {
+                <tr class="bg-primary text-white">
+                    <td colspan="@Model.ObjetivosGobierno.Count(o => o.Codigo.StartsWith("APO"))" class="text-center">Alinear, planificar y organizar</td>
+                </tr>
+                <tr>
+                    @foreach (var objetivo in Model.ObjetivosGobierno.Where(o => o.Codigo.StartsWith("APO")))
+                    {
+                        <td class="align-middle @(Model.HighlightedRowIndexes.Contains(objetivo.IdGobierno) ? "bg-success text-white" : "")">@objetivo.Codigo<br /><small>@objetivo.Descripcion</small></td>
+                    }
+                </tr>
+            }
+            
+            @if (Model.ObjetivosGobierno.Any(o => o.Codigo.StartsWith("BAI")))
+            {
+                <tr class="bg-primary text-white">
+                    <td colspan="@Model.ObjetivosGobierno.Count(o => o.Codigo.StartsWith("BAI"))" class="text-center">Construir, Adquirir e Implementar</td>
+                </tr>
+                <tr>
+                    @foreach (var objetivo in Model.ObjetivosGobierno.Where(o => o.Codigo.StartsWith("BAI")))
+                    {
+                        <td class="align-middle @(Model.HighlightedRowIndexes.Contains(objetivo.IdGobierno) ? "bg-success text-white" : "")">@objetivo.Codigo<br /><small>@objetivo.Descripcion</small></td>
+                    }
+                </tr>
+            }
+
+            @if (Model.ObjetivosGobierno.Any(o => o.Codigo.StartsWith("DSS")))
+            {
+                <tr class="bg-primary text-white">
+                    <td colspan="@Model.ObjetivosGobierno.Count(o => o.Codigo.StartsWith("DSS"))" class="text-center">Entregar, Servicio y Soporte</td>
+                </tr>
+                <tr>
+                    @foreach (var objetivo in Model.ObjetivosGobierno.Where(o => o.Codigo.StartsWith("DSS")))
+                    {
+                        <td class="align-middle @(Model.HighlightedRowIndexes.Contains(objetivo.IdGobierno) ? "bg-success text-white" : "")">@objetivo.Codigo<br /><small>@objetivo.Descripcion</small></td>
+                    }
+                </tr>
+            }
+            
+            @if (Model.ObjetivosGobierno.Any(o => o.Codigo.StartsWith("MEA")))
+            {
+                <tr class="bg-primary text-white">
+                    <td colspan="@Model.ObjetivosGobierno.Count(o => o.Codigo.StartsWith("MEA"))" class="text-center">Monitorear, Evaluar y Valorar</td>
+                </tr>
+                <tr>
+                    @foreach (var objetivo in Model.ObjetivosGobierno.Where(o => o.Codigo.StartsWith("MEA")))
+                    {
+                        <td class="align-middle @(Model.HighlightedRowIndexes.Contains(objetivo.IdGobierno) ? "bg-success text-white" : "")">@objetivo.Codigo<br /><small>@objetivo.Descripcion</small></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: false,
+            scrollX: true
+        });
+    });
+</script>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+    .text-white {
+        color: #ffffff !important;
+    }
+    .highlighted-objectives {
+        margin-top: 20px;
+    }
+    .highlighted-objectives ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .highlighted-objectives li {
+        background-color: #28a745;
+        color: white;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+</style>
