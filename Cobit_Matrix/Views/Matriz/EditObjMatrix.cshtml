@@ -1,0 +1,135 @@
+@model Cobit_Matrix.ViewModel.MatrizViewModel
+
+@{
+    ViewData["Title"] = "Matriz Objetivos de Gobierno";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="~/css/styles.css"/>
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <button type="button" class="btn btn-warning" id="resetButton">Resetear</button>
+    <button type="button" class="btn btn-success" id="lockButton">Guardar Cambios</button>
+    <button type="button" class="btn btn-primary" id="nextButton" disabled>Siguiente</button>
+</div>
+
+<div class="table-responsive">
+    <table id="matrixTable" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th>Matriz Cobit 19</th>
+            @foreach (var metaAlineamiento in Model.MetaAlineamientos)
+            {
+            <th>
+                @metaAlineamiento.Codigo<br/><small>@metaAlineamiento.Descripcion</small>
+            </th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var objGobierno in Model.ObjetivosGobierno)
+        {
+        <tr>
+            <td>
+                <button type="button" class="highlight-row-btn btn btn-secondary">R</button>
+                @objGobierno.Codigo<br/><small>@objGobierno.Descripcion</small>
+            </td>
+            @foreach (var metaEmpresarial in Model.MetaEmpresariales)
+            {
+            <td>
+                <select class="form-control matrix-select">
+                    <option value="">--</option>
+                    <option value="S">S</option>
+                    <option value="P">P</option>
+                </select>
+            </td>
+            }
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#matrixTable').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: false, // This removes the default sorting functionality
+        });
+
+        var isLocked = false; // Flag to track the lock state
+
+        // Retrieve highlighted rows from local storage
+        var highlightedRows = JSON.parse(localStorage.getItem('highlightedRows')) || [];
+
+        // Function to reset the matrix
+        $('#resetButton').on('click', function () {
+            table.cells().nodes().to$().find('select').val('').prop('disabled', false);
+            table.cells().nodes().to$().removeClass('highlight');
+            table.rows().nodes().to$().css('background-color', '').removeClass('filaHight');
+            $('#nextButton').prop('disabled', true);
+            $('#lockButton').prop('disabled', false);
+            isLocked = false; // Reset the lock state
+            $('#matrixTable thead th').css('background-color', ''); // Reset header highlight
+        });
+
+        // Function to lock the matrix
+        $('#lockButton').on('click', function () {
+            table.cells().nodes().to$().find('select').prop('disabled', true);
+            $('#nextButton').prop('disabled', false);
+            $('#lockButton').prop('disabled', true);
+            $('#resetButton').prop('disabled', false);
+            isLocked = true; // Set the lock state
+        });
+
+        // Function to go to the next page
+        $('#nextButton').on('click', function () {
+            window.location.href = '/nextPage'; // Replace with the actual URL of the next page
+        });
+
+        // Left header button click handler
+        $('#matrixTable tbody').on('click', '.highlight-row-btn', function (e) {
+            e.stopPropagation(); // Prevent the row click handler from being triggered
+
+            if (isLocked) return; // Prevent highlighting if the matrix is locked
+
+            var row = $(this).closest('tr');
+            row.toggleClass('highlight');
+            row.find('select').prop('disabled', row.hasClass('highlight'));
+
+            if (row.hasClass('highlight')) {
+                row.find('select').each(function () {
+                    if ($(this).val() === 'P') {
+                        var colIdx = $(this).closest('td').index();
+                        table.column(colIdx).nodes().to$().css('background-color', '#71a4c6');
+                        $(table.column(colIdx).header()).css('background-color', '#71a4c6'); // Highlight header
+                    }
+                });
+            } else {
+                row.find('select').each(function () {
+                    if ($(this).val() === 'P') {
+                        var colIdx = $(this).closest('td').index();
+                        table.column(colIdx).nodes().to$().css('background-color', '');
+                        $(table.column(colIdx).header()).css('background-color', ''); // Unhighlight header
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+<style>
+    .highlight {
+        background-color: #4fc3a2 !important;
+    }
+    .highlight-column {
+        background-color: #ffff99 !important;
+    }
+</style>

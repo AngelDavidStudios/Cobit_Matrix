@@ -33,4 +33,20 @@ public class MatrizController: Controller
 
         return View(viewModel);
     }
+
+    public async Task<IActionResult> EditObjMatrix()
+    {
+        var metaAlineamientos = await _metaAlineamientoService.GetAllAsync("GoalAlignment");
+        var metaEmpresariales = await _metaEmpresarialService.GetAllAsync("GoalBusiness");
+        var objetivosGobierno = await _ObjetivosGobiernoService.GetAllAsync("ObjeGovernment");
+
+        var viewModel = new MatrizViewModel()
+        {
+            MetaAlineamientos = metaAlineamientos,
+            MetaEmpresariales = metaEmpresariales,
+            ObjetivosGobierno = objetivosGobierno
+        };
+
+        return View(viewModel);
+    }
 }

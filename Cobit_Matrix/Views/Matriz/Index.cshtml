@@ -19,7 +19,7 @@ ViewData["Title"] = "Matriz de Metas";
     <table id="matrixTable" class="display" style="width:100%">
         <thead>
         <tr>
-            <th>Meta Alineamiento</th>
+            <th>Matriz Cobit 19</th>
             @foreach (var metaEmpresarial in Model.MetaEmpresariales)
             {
                 <th>@metaEmpresarial.Codigo<br /><small>@metaEmpresarial.Descripcion</small></th>
@@ -79,7 +79,14 @@ ViewData["Title"] = "Matriz de Metas";
 
         // Function to go to the next page
         $('#nextButton').on('click', function () {
-            window.location.href = '/nextPage'; // Replace with the actual URL of the next page
+            var highlightedRows = [];
+            $('#matrixTable tbody tr').each(function (index) {
+                if ($(this).hasClass('highlight')) {
+                    highlightedRows.push(index);
+                }
+            });
+            localStorage.setItem('highlightedRows', JSON.stringify(highlightedRows));
+            window.location.href = '/Matriz/EditObjMatrix'; // Replace with the actual URL of the next page
         });
 
         // Existing column click handler
